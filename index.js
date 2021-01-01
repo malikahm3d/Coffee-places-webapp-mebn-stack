@@ -10,10 +10,10 @@ const ExpressError = require('./utils/ExpressError');
 const Joi = require('joi');
 const { coffeeplaceSchema, reviewSchema } = require('./schemas');
 const Review = require('./models/review');
-
 const coffeeplaces = require('./routes/coffeeplaces');
 const reviews = require('./routes/reviews');
-
+const session = require('express-session');
+const flash = require('connect-flash');
 
 mongoose.connect('mongodb://localhost:27017/cawfeeplaces', {
     useNewUrlParser: true,
@@ -35,6 +35,31 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionConfig = {
+    secret: 'isthisasecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        //this is the default, but we still do it because SECURITY.
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+        //expires after a week from now. max age is a week.
+    }
+}
+app.use(session(sessionConfig))
+app.use(flash());
+
+//middleware to catch all flash messages:
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    //assigning the success flash to the loclas success.
+    //we don't have to past it, we have access to it everywhere,
+    //we delcared it globally.
+    next();
+    //REAMINDER: Always pass next at end middleware so you don't stop the app :I
+});
 
 app.use('/coffeeplaces', coffeeplaces);
 app.use('/coffeeplaces/:id/reviews', reviews);

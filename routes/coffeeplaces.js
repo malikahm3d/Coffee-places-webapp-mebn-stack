@@ -39,23 +39,34 @@ router.post('/', validateCoffeeplace, WrapAsync(async (req, res, next) => {
     const coffeeplace = new Coffeeplace(req.body.coffeeplace);
     //req.body was saved with 'coffeeplace' so we just parse that.
     await coffeeplace.save();
-    res.redirect('/coffeeplaces');
+    req.flash('success', 'Successfully added a place!');
+    res.redirect(`/coffeeplaces/${coffeeplace._id}`);
 }));
-
 
 
 router.get('/:id', WrapAsync(async (req,res) => {
     const { id } = req.params;
     const coffeeplace = await Coffeeplace.findById(id).populate('reviews');
-    if(!coffeeplace) throw new ExpressError('ID Not Found', 400);
+    if(!coffeeplace) { 
+        throw new ExpressError('Coffee place Not Found', 400);
+        //OR
+        //req.flash('error', 'Coffee place not found!');
+    }
     //I can't beilve I did error handling outside the course.
     //This has been a very difficult section.
     res.render('coffeeplaces/show', { coffeeplace });
+    //Flash: you can pass req.flas('success') to pass the msg
+    //but that's not best practics!
 }));
 
 
 router.get('/:id/edit', WrapAsync(async (req,res) => {
     const coffeeplace = await Coffeeplace.findById(req.params.id);
+    if(!coffeeplace) { 
+        throw new ExpressError('Coffee place Not Found', 400);
+        //OR
+        //req.flash('error', 'Coffee place not found!');
+    }
     res.render('coffeeplaces/edit', { coffeeplace });
 }));
 router.put('/:id', validateCoffeeplace, WrapAsync(async (req,res) => {
@@ -63,12 +74,14 @@ router.put('/:id', validateCoffeeplace, WrapAsync(async (req,res) => {
     const coffeeplace = await Coffeeplace.findByIdAndUpdate(id, {...req.body.coffeeplace},
         {runValidators: true, useFindAndModify: false, new: true}
     );
+    req.flash('success', 'Successfully updated a place!');
     res.redirect(`/coffeeplaces/${id}`);
 }));
 
 router.delete('/:id', WrapAsync(async(req,res) => {
     const { id } = req.params;
     const coffeeplace = await Coffeeplace.findByIdAndDelete(id);
+    req.flash('success', 'Successfully deleted a place!');
     res.redirect('/coffeeplaces');
 }));
 

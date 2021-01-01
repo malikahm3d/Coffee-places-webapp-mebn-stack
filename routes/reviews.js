@@ -26,7 +26,8 @@ router.post('/', validateReview, WrapAsync(async (req, res) => {
     //I MISSED THIS STEP!!!!!
     //this is a review that was PASSSED through a place. but stored in a vacuum :(
     await review.save();
-    await coffeeplace.save()
+    await coffeeplace.save();
+    req.flash('success', 'Successfully created a review!');
     res.redirect(`/coffeeplaces/${id}`);
 }));
 
@@ -36,6 +37,7 @@ router.delete('/:reviewId', WrapAsync(async (req, res) => {
     //remove the review from the reviews array in the coffeeplace model
     await Review.findByIdAndDelete(reviewId, { useFindAndModify: false });
     //delete the review in the Review model (the straight forward one)
+    req.flash('success', 'Successfully deleted your review!');
     res.redirect(`/coffeeplaces/${id}`);
 }));
 
