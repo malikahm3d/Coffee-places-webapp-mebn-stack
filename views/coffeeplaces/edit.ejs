@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate')%> 
+    <div class="row">
+        <h1 class="text-center">Edit Coffee Place</h1>
+        <div class="col-6 offset-3">
+            <form action="/coffeeplaces/<%= coffeeplace._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Name</label>
+                    <input class="form-control" type="text" name="coffeeplace[title]" id="title" required value="<%= coffeeplace.title %>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="location">City</label>
+                    <input class="form-control" type="text" name="coffeeplace[location]" id="location" required value="<%= coffeeplace.location %>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="image">Image url</label>
+                    <input class="form-control" type="text" name="coffeeplace[image]" id="image" required value="<%= coffeeplace.image %>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="descreption">Descreption</label>
+                    <textarea class="form-control" type="text" name="coffeeplace[descreption]" id="descreption" required><%= coffeeplace.descreption%></textarea>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="price-label">SR</span>
+                    <input type="number" id="price" min="0.00" required name="coffeeplace[price]" class="form-control" placeholder="0.00"
+                    aria-label="Price" aria-describedby="price-label" value="<%= coffeeplace.price %>">
+                    <span class="input-group-text form" id="price-label">Per hour</span>
+                  </div>
+                <button class="btn btn-info mb-2">Edit coffee place</button>
+            </form>
+            <a class="btn btn-secondary mb-3" href="/coffeeplaces/<%= coffeeplace._id %>">Cancel and go back</a>
+        </div>
+    </div>
