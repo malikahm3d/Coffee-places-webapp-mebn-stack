@@ -17,7 +17,7 @@ db.once("open", () => {
 });
 
 const city = cities.filter(city => city.country.match('SA') && city.population > 100000);
-//finding major citites in saudi
+//finding major (more than 1M resident) citites in Saudi Arabia
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 //find index random in a given array

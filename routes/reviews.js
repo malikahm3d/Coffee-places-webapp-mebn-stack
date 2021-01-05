@@ -7,7 +7,6 @@ const { reviewSchema } = require('../schemas');
 const Coffeeplace = require('../models/Coffeeplace');
 
 
-
 const validateReview = (req, res, next) => {
     const { err } = reviewSchema.validate(req.body);
     if(err){

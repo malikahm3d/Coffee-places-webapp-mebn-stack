@@ -10,6 +10,14 @@
           <a class="nav-link" href="/coffeeplaces">Browse Places</a>
           <a class="nav-link" href="/coffeeplaces/new">New Place</a>
         </div>
+        <div class="navbar-nav ms-auto">
+          <% if(!currentUser){ %> 
+          <a href="/login" class="nav-link">Log in</a>
+          <a href="/register" class="nav-link">Register</a>
+          <% } else { %> 
+          <a href="/logout" class="nav-link">Log out</a>
+          <% } %> 
+        </div>
       </div>
     </div>
   </nav>

@@ -59,14 +59,21 @@ passport.use(new LocalStragety(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//middleware to catch all flash messages:
+//middleware to assign envoirment varibles to be rendered:
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-    //assigning the success flash to the loclas success.
-    //we don't have to past it, we have access to it everywhere,
-    //we delcared it globally.
-    res.locals.register = req.flash('register');
+    //assigning the success flash to the loclas success and error.
+    
+    res.locals.currentUser = req.user;
+    //get current user so we can check if there is logged in user and make clind-side decision based on it
+
+    if(!['/login', '/register', '/', '/coffeeplaces'].includes(req.originalUrl)){
+        req.session.returnTo = req.originalUrl;
+        //if the user is coming from any page that isn't the homepage or login or register
+        //get that url and save it to the session.
+    }
+
     next();
     //REAMINDER: Always pass next at end middleware so you don't stop the app :I
 });

@@ -4,7 +4,7 @@ const WrapAsync = require('../utils/WrapAsync');
 const ExpressError = require('../utils/ExpressError');
 const Coffeeplace = require('../models/Coffeeplace');
 const { coffeeplaceSchema } = require('../schemas');
-
+const { isLoggedin } = require('../middleware');
 
 
 const validateCoffeeplace = (req, res, next) => {
@@ -30,10 +30,10 @@ router.get('/', async (req,res) => {
 });
 
 
-router.get('/new', (req,res) => {
+router.get('/new', isLoggedin, (req,res) => {
     res.render('coffeeplaces/new')
 });
-router.post('/', validateCoffeeplace, WrapAsync(async (req, res, next) => {
+router.post('/', isLoggedin, validateCoffeeplace, WrapAsync(async (req, res, next) => {
     //mistake: res.send(req.body);
     //leg: if(!req.body.coffeeplace) throw new ExpressError('Invalid Data', 400);
     const coffeeplace = new Coffeeplace(req.body.coffeeplace);
