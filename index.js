@@ -2,18 +2,18 @@ const express = require('express');
 const app = express();
 const path = require('path')
 const mongoose = require('mongoose');
-const Coffeeplace = require('./models/Coffeeplace');
 const methodOverride = require('method-override');
 const engine = require('ejs-mate');
-const WrapAsync = require('./utils/WrapAsync');
 const ExpressError = require('./utils/ExpressError');
-const Joi = require('joi');
-const { coffeeplaceSchema, reviewSchema } = require('./schemas');
-const Review = require('./models/review');
-const coffeeplaces = require('./routes/coffeeplaces');
-const reviews = require('./routes/reviews');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStragety = require('passport-local');
+const User = require('./models/user');
+
+const users = require('./routes/users');
+const coffeeplaces = require('./routes/coffeeplaces');
+const reviews = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/cawfeeplaces', {
     useNewUrlParser: true,
@@ -46,9 +46,18 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7
         //expires after a week from now. max age is a week.
     }
-}
-app.use(session(sessionConfig))
+};
+
+app.use(session(sessionConfig));
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStragety(User.authenticate()));
+
+//the two line are for passport session support
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //middleware to catch all flash messages:
 app.use((req, res, next) => {
@@ -57,10 +66,12 @@ app.use((req, res, next) => {
     //assigning the success flash to the loclas success.
     //we don't have to past it, we have access to it everywhere,
     //we delcared it globally.
+    res.locals.register = req.flash('register');
     next();
     //REAMINDER: Always pass next at end middleware so you don't stop the app :I
 });
 
+app.use('/', users);
 app.use('/coffeeplaces', coffeeplaces);
 app.use('/coffeeplaces/:id/reviews', reviews);
 
@@ -74,7 +85,7 @@ app.all('*', (req, res, next) => {
     //when user goes to a non-exisisting page
 });
 app.use((err, req, res, next) => {
-    //this is the generic error handler. this is where next() is thrown
+    //this is the generic error handler. this is where next(e) is thrown
     const { statusCode = 500 } = err;
     if(!err.message) message = 'Something universal went wrong';
     res.status(statusCode).render('errors', { err });

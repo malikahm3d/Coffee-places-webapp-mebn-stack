@@ -1,4 +1,3 @@
-const { join } = require('all-the-cities');
 const Joi = require('joi');
 
 module.exports.coffeeplaceSchema = Joi.object({
