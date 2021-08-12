@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Coffeeplace = require('../models/Coffeeplace');
 const cities = require('all-the-cities');
 const { descriptors, places} = require('./seedHelpers');
+const user = require('../models/user');
 //I went out the scope of the course and found this library
 
 mongoose.connect('mongodb://localhost:27017/cawfeeplaces', {
@@ -26,14 +27,17 @@ const seedDB = async () => {
     for(let i=0; i<5; i++){
         const random = Math.floor(Math.random() * 10);
         const place = Coffeeplace({
+            author: '611486fe7ecefa50a0ba06b7',
             location: `${ city[random].name }`,
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/436278/1600x900',
             price: random,
-            descreption: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, natus. Illo dolore, optio debitis adipisci, est culpa minima repudiandae libero, recusandae facilis modi velit. Facilis possimus fugit et molestiae sunt!'
+            descreption: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus, natus. Illo dolore, optio debitis adipisci, est culpa minima repudiandae libero, recusandae facilis modi velit. Facilis possimus fugit et molestiae sunt!',
+            
         });
         await place.save();
     }
+
 };
 
 seedDB().then(() => {

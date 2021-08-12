@@ -8,7 +8,7 @@ const isLoggedin = (req, res, next) => {
         //so you don't get ERR_HTTP_HEADERS_SENT
         //basically more than one res is sent
     }
-    next();
-}
+    next()
+};
 
 module.exports = isLoggedin;

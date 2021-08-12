@@ -4,19 +4,23 @@
         <div id="display" class="card mb-3">
             <img src="<%= coffeeplace.image %>" class="card-img-top" alt="...">
             <div class="card-body">
+            <div class="card-body">
               <h5 class="card-title"><%= coffeeplace.title %></h5>
+              <h5 class="card-title" style="font-size: 0.95em; color: dimgray;"><%= coffeeplace.author.username %></h5>
               <p class="card-text"><%= coffeeplace.descreption %></p>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-muted"><%= coffeeplace.location %></li>
               <li class="list-group-item">SR <%= coffeeplace.price %>/hour</li>
             </ul>
+            <% if(currentUser && currentUser._id.equals(coffeeplace.author)){ %> 
             <div class="card-body">
                 <a href="/coffeeplaces/<%=coffeeplace._id%>/edit" class="btn btn-info">Edit</a>
                 <form class="d-inline" action="/coffeeplaces/<%=coffeeplace._id%>/?_method=DELETE" method="POST">
                     <button class=" btn btn-danger">DELETE</button>
                 </form>
             </div>
+            <% } %> 
             <% if(coffeeplace.createdAt){ %> 
             <div class="card-footer text-muted">
                 <%=`${coffeeplace.createdAt.getDate()} ${coffeeplace.createdAt.getMonth()+1} ${coffeeplace.createdAt.getFullYear()}`%>

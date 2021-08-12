@@ -1,6 +1,8 @@
+const { ref } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
+const User = require('./user')
 
 const CoffeeplaceSchema = Schema({
     title: String,
@@ -8,7 +10,13 @@ const CoffeeplaceSchema = Schema({
     price: Number,
     descreption: String,
     location: String,
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review'}]
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    reviews: [{
+        type: Schema.Types.ObjectId, ref: 'Review'
+    }]
 }, { timestamps: true });
 
 CoffeeplaceSchema.post('findOneAndDelete', async function(doc){
