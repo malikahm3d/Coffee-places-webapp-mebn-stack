@@ -31,7 +31,11 @@ router.post('/', isLoggedin, validateCoffeeplace, WrapAsync(async (req, res, nex
 
 router.get('/:id', WrapAsync(async (req,res) => {
     const { id } = req.params;
-    const coffeeplace =  await Coffeeplace.findById(id).populate('reviews').populate('author');
+    const coffeeplace =  await Coffeeplace.findById(id).populate({
+        path: 'reviews',
+        perDocumentLimit: 5,
+        populate: { path: 'author' }
+    }).populate('author');
     if(!coffeeplace) { 
         throw new ExpressError('Coffee place Not Found', 400);
         //OR

@@ -3,14 +3,15 @@ const router = express.Router({mergeParams: true});
 const WrapAsync = require('../utils/WrapAsync');
 const ExpressError = require('../utils/ExpressError');
 const Review = require('../models/review');
-const { validateReview } = require('../middleware')
+const { validateReview, isLoggedin, isAuthorOfReview } = require('../middleware')
 const Coffeeplace = require('../models/Coffeeplace');
 
 
-router.post('/', validateReview, WrapAsync(async (req, res) => {
+router.post('/', isLoggedin, validateReview, WrapAsync(async (req, res) => {
     const{ id } = req.params;
     const coffeeplace = await Coffeeplace.findById(id);
     const review = new Review(req.body.review);
+    review.author = req.user._id
     coffeeplace.reviews.push(review);
     //I MISSED THIS STEP!!!!!
     //this is a review that was PASSSED through a place. but stored in a vacuum :(
@@ -20,8 +21,8 @@ router.post('/', validateReview, WrapAsync(async (req, res) => {
     res.redirect(`/coffeeplaces/${id}`);
 }));
 
-router.delete('/:reviewId', WrapAsync(async (req, res) => {
-    const { id, reviewId} = req.params;
+router.delete('/:reviewId', isLoggedin, isAuthorOfReview, WrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
     await Coffeeplace.findByIdAndUpdate(id, { $pull: { review: reviewId } }, { useFindAndModify: false });
     //remove the review from the reviews array in the coffeeplace model
     await Review.findByIdAndDelete(reviewId, { useFindAndModify: false });

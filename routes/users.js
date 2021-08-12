@@ -48,16 +48,16 @@ router.get('/login', (req, res) => {
     res.render('users/login');
 });
 router.post('/login', passportLoginMiddleware, (req, res) => {
-    const redirectURL = req.session.returnTo || '/coffeeplaces'
-    if(!req.session.returnTo){
-        //if the user isn't bring redirected, welcome them back.
-        req.flash('success', 'welcome back!')
-    }
+    // const redirectURL = req.session.returnTo || '/coffeeplaces'
+    // if(!req.session.returnTo){
+    //     //if the user isn't bring redirected, welcome them back.
+    //     req.flash('success', 'welcome back!')
+    // }
     //redirect the user the page they we previosly on
     //if thats not the case, redicet to /coffeeplaces
-    delete req.session.returnTo;
+    //delete req.session.returnTo;
     //this line is probably not neccessary
-    res.redirect(redirectURL);
+    res.redirect('/coffeeplaces');
 });
 
 //log out

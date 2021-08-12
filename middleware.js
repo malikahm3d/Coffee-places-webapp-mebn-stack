@@ -1,10 +1,11 @@
 const { ExpressError } = require('./utils/ExpressError');
 const { coffeeplaceSchema, reviewSchema } = require('./schemas.js');
 const Coffeeplace = require('./models/Coffeeplace');
+const Review = require('./models/review');
 
 module.exports.isLoggedin = (req, res, next) => {
     if(!req.isAuthenticated()){
-        //req.session.returnTo = req.originalURL
+        req.session.returnTo = req.originalURL
         //get where the user is coming from
         req.flash('error', 'You must be logged in to submit a new place');
         return res.redirect('/login')
@@ -40,6 +41,17 @@ module.exports.isAuthor = async(req, res, next) => {
         return res.redirect(`/coffeeplaces/${id}`);
     }
     next();
+};
+
+module.exports.isAuthorOfReview = async(req, res, next) => {
+    const { id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+    if(review.author.equals(req.user._id)){
+        next();
+    } else {
+        req.flash('error', 'invalid cordentials');
+        return res.redirect(`/coffeeplaces/${id}`);
+    }
 };
 
 module.exports.validateReview = (req, res, next) => {
