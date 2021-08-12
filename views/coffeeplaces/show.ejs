@@ -13,7 +13,7 @@
               <li class="list-group-item text-muted"><%= coffeeplace.location %></li>
               <li class="list-group-item">SR <%= coffeeplace.price %>/hour</li>
             </ul>
-            <% if(currentUser && currentUser._id.equals(coffeeplace.author)){ %> 
+            <% if(currentUser && currentUser._id.equals(coffeeplace.author._id)){ %> 
             <div class="card-body">
                 <a href="/coffeeplaces/<%=coffeeplace._id%>/edit" class="btn btn-info">Edit</a>
                 <form class="d-inline" action="/coffeeplaces/<%=coffeeplace._id%>/?_method=DELETE" method="POST">

@@ -3,19 +3,9 @@ const router = express.Router({mergeParams: true});
 const WrapAsync = require('../utils/WrapAsync');
 const ExpressError = require('../utils/ExpressError');
 const Review = require('../models/review');
-const { reviewSchema } = require('../schemas');
+const { validateReview } = require('../middleware')
 const Coffeeplace = require('../models/Coffeeplace');
 
-
-const validateReview = (req, res, next) => {
-    const { err } = reviewSchema.validate(req.body);
-    if(err){
-        const msg = err.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
 
 router.post('/', validateReview, WrapAsync(async (req, res) => {
     const{ id } = req.params;
