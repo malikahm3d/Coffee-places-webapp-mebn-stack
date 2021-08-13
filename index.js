@@ -83,7 +83,8 @@ app.use('/coffeeplaces', coffeeplaces);
 app.use('/coffeeplaces/:id/reviews', reviews);
 
 app.get('/', (req,res) => {
-    res.render('home');
+    // res.render('home');
+    res.redirect('/coffeeplaces')
 });
 
 
