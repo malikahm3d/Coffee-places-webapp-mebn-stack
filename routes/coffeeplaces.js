@@ -19,3 +19,4 @@ router.put('/:id', isLoggedin, isAuthor, validateCoffeeplace, WrapAsync(Coffeepl
 router.delete('/:id', isLoggedin, isAuthor, WrapAsync(Coffeeplacescontroller.delete));
 
 module.exports = router;
+// test
