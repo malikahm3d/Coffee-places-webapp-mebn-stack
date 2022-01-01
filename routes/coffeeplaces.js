@@ -6,12 +6,16 @@ const Coffeeplace = require('../models/Coffeeplace');
 const { coffeeplaceSchema } = require('../schemas');
 const { isLoggedin, isAuthor, validateCoffeeplace } = require('../middleware');
 const Coffeeplacescontroller = require('../controllers/coffeeplaces');
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage })
 
 router.get('/', WrapAsync(Coffeeplacescontroller.index));
+router.get('/new', isLoggedin, Coffeeplacescontroller.new);
+
 router.get('/:id', WrapAsync(Coffeeplacescontroller.show));
 
-router.get('/new', isLoggedin, Coffeeplacescontroller.new);
-router.post('/', isLoggedin, validateCoffeeplace, WrapAsync(Coffeeplacescontroller.create));
+router.post('/', validateCoffeeplace, upload.array('coffeeplace[image]', 4), WrapAsync(Coffeeplacescontroller.create));
 
 router.get('/:id/edit', isLoggedin, isAuthor, WrapAsync(Coffeeplacescontroller.edit));
 router.put('/:id', isLoggedin, isAuthor, validateCoffeeplace, WrapAsync(Coffeeplacescontroller.update));

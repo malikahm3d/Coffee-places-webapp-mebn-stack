@@ -2,7 +2,7 @@
     <div class="row">
         <h1 class="text-center">New Coffee Place</h1>
         <div class="col-6 offset-3">
-            <form action="/coffeeplaces" method="POST" novalidate class="needs-validation">
+            <form action="/coffeeplaces" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="title">Name</label>
                     <input class="form-control" type="text" name="coffeeplace[title]" id="title" required>
@@ -11,10 +11,11 @@
                     <label class="form-label" for="location">City</label>
                     <input class="form-control" type="text" name="coffeeplace[location]" id="location" required>
                 </div>
-                <div class="mb-3">
+                <input type="file" name="coffeeplace[image]" id="image" multiple>
+                <!-- <div class="mb-3">
                     <label class="form-label" for="image">Image url</label>
                     <input class="form-control" type="text" name="coffeeplace[image]" id="image" required>
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label class="form-label" for="descreption">Descreption</label>
                     <textarea class="form-control" type="text" name="coffeeplace[descreption]" id="descreption" required></textarea>

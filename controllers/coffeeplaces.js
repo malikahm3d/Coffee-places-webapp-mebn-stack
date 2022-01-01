@@ -1,3 +1,4 @@
+const { response } = require('express');
 const Coffeeplace = require('../models/Coffeeplace');
 const ExpressError = require('../utils/ExpressError');
 
@@ -11,15 +12,19 @@ module.exports.new = (req, res, next) => {
 };
 
 module.exports.create = async (req, res, next) => {
-    //mistake: res.send(req.body);
-    //leg: if(!req.body.coffeeplace) throw new ExpressError('Invalid Data', 400);
-    const coffeeplace = new Coffeeplace(req.body.coffeeplace);
-    //req.body was saved with 'coffeeplace' so we just parse that.
-    coffeeplace.author = req.user._id
-    // becuase db is not realtional we have to hardcode the foreign key
-    await coffeeplace.save();
-    req.flash('success', 'Successfully added a place!');
-    res.redirect(`/coffeeplaces/${coffeeplace._id}`);
+    // //mistake: res.send(req.body);
+    // if(!req.body.coffeeplace) {
+    //     throw new ExpressError('Invalid Data', 400);
+    // }
+    // const coffeeplace = new Coffeeplace(req.body.coffeeplace);
+    // //req.body was saved with 'coffeeplace' so we just parse that.
+    // coffeeplace.author = req.user._id
+    // // becuase db is not realtional we have to hardcode the foreign key
+    // await coffeeplace.save();
+    // req.flash('success', 'Successfully added a place!');
+    // res.redirect(`/coffeeplaces/${coffeeplace._id}`);
+    console.dir(req.files);
+    res.send('it worked')
 };
 
 module.exports.show = async (req,res) => {
@@ -56,6 +61,7 @@ module.exports.update = async (req,res) => {
     const coffeeplace = await Coffeeplace.findByIdAndUpdate(id, {...req.body.coffeeplace},
         {runValidators: true, useFindAndModify: false, new: true}
     );
+    // altho we used PUT, we updated all the values in the DB
     req.flash('success', 'Successfully updated a place!');
     res.redirect(`/coffeeplaces/${id}`);
 };
